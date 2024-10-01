@@ -59,8 +59,8 @@ export default class FilesController {
    *
    * @apiHeader {String} X-Token Authentication token
    *
-   * @apiParam {String} name Name of the file
-   * @apiParam {String} type Type of the file (file|folder|image)
+   * @apiBody {String} name Name of the file
+   * @apiBody {String} type Type of the file (file|folder|image)
    * @apiParam {String} [parentId] Parent folder ID (default: 0 for root)
    * @apiParam {Boolean} [isPublic] File visibility (default: false)
    * @apiParam {String} [data] Base64 encoded file content (required for non-folders)

@@ -11,8 +11,8 @@ export default class UsersController {
    * @apiName PostNew
    * @apiGroup User
    *
-   * @apiParam {String} email User's email
-   * @apiParam {String} password User's password
+   * @apiBody {String} email User's email
+   * @apiBody {String} password User's password
    *
    * @apiSuccess {String} email User's email
    * @apiSuccess {String} id User's ID

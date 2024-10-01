@@ -2,13 +2,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 /**
- * @api {error} APIError API Error
- * @apiName APIError
- * @apiGroup Errors
- * @apiDescription Represents an error in this API.
- *
- * @apiParam {Number} code HTTP status code
- * @apiParam {String} message Error message
+ * Represents an error in this API.
  */
 export class APIError extends Error {
   constructor(code, message) {
@@ -19,17 +13,11 @@ export class APIError extends Error {
 }
 
 /**
- * @api {middleware} errorResponse Error Response Middleware
- * @apiName ErrorResponse
- * @apiGroup Errors
- * @apiDescription Handles error responses for the API.
- *
- * @apiParam {Error} err The error object.
- * @apiParam {Request} req The Express request object.
- * @apiParam {Response} res The Express response object.
- * @apiParam {NextFunction} next The Express next function.
- *
- * @apiError (Error 4xx-5xx) {Object} error Error object with message
+ * Applies Basic authentication to a route.
+ * @param {Error} err The error object.
+ * @param {Request} req The Express request object.
+ * @param {Response} res The Express response object.
+ * @param {NextFunction} next The Express next function.
  */
 export const errorResponse = (err, req, res, next) => {
   const defaultMsg = `Failed to process ${req.url}`;
@@ -41,4 +29,4 @@ export const errorResponse = (err, req, res, next) => {
   res.status(500).json({
     error: err ? err.message || err.toString() : defaultMsg,
   });
-}
+};

@@ -1,20 +1,5 @@
 import envLoader from '../utils/env_loader';
 
-/**
- * @api {function} startServer Start API Server
- * @apiName StartServer
- * @apiGroup Server
- * @apiDescription Starts the API server on the specified port.
- *
- * @apiParam {Object} api Express application instance
- *
- * @apiExample {javascript} Usage:
- *     import express from 'express';
- *     import startServer from './libs/boot';
- *     
- *     const app = express();
- *     startServer(app);
- */
 const startServer = (api) => {
   envLoader();
   const port = process.env.PORT || 5000;
@@ -24,4 +9,4 @@ const startServer = (api) => {
   });
 };
 
-export default startServer
+export default startServer;

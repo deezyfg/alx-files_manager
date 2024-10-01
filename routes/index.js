@@ -65,6 +65,7 @@ const injectRoutes = (api) => {
    * @api {get} /files/:id Get file information
    * @apiName GetShow
    * @apiGroup Files
+   * @apiParam {String} id File ID
    */
   api.get('/files/:id', xTokenAuthenticate, FilesController.getShow);
 
@@ -79,6 +80,7 @@ const injectRoutes = (api) => {
    * @api {put} /files/:id/publish Publish a file
    * @apiName PutPublish
    * @apiGroup Files
+   * @apiParam {String} id File ID
    */
   api.put('/files/:id/publish', xTokenAuthenticate, FilesController.putPublish);
 
@@ -86,6 +88,7 @@ const injectRoutes = (api) => {
    * @api {put} /files/:id/unpublish Unpublish a file
    * @apiName PutUnpublish
    * @apiGroup Files
+   * @apiParam {String} id File ID
    */
   api.put('/files/:id/unpublish', xTokenAuthenticate, FilesController.putUnpublish);
 
@@ -93,6 +96,7 @@ const injectRoutes = (api) => {
    * @api {get} /files/:id/data Get file content
    * @apiName GetFile
    * @apiGroup Files
+   * @apiParam {String} id File ID
    */
   api.get('/files/:id/data', FilesController.getFile);
 

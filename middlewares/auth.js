@@ -3,15 +3,10 @@ import { Request, Response, NextFunction } from 'express';
 import { getUserFromXToken, getUserFromAuthorization } from '../utils/auth';
 
 /**
- * @api {middleware} basicAuthenticate Basic Authentication Middleware
- * @apiName BasicAuthenticate
- * @apiGroup Authentication
- * @apiDescription Applies Basic authentication to a route.
- *
- * @apiHeader {String} Authorization Basic Auth token
- *
- * @apiSuccess (Success 200) {Object} req.user User object added to the request
- * @apiError (Error 401) {Object} error Unauthorized
+ * Applies Basic authentication to a route.
+ * @param {Request} req The Express request object.
+ * @param {Response} res The Express response object.
+ * @param {NextFunction} next The Express next function.
  */
 export const basicAuthenticate = async (req, res, next) => {
   const user = await getUserFromAuthorization(req);
@@ -25,15 +20,10 @@ export const basicAuthenticate = async (req, res, next) => {
 };
 
 /**
- * @api {middleware} xTokenAuthenticate X-Token Authentication Middleware
- * @apiName XTokenAuthenticate
- * @apiGroup Authentication
- * @apiDescription Applies X-Token authentication to a route.
- *
- * @apiHeader {String} X-Token Authentication token
- *
- * @apiSuccess (Success 200) {Object} req.user User object added to the request
- * @apiError (Error 401) {Object} error Unauthorized
+ * Applies X-Token authentication to a route.
+ * @param {Request} req The Express request object.
+ * @param {Response} res The Express response object.
+ * @param {NextFunction} next The Express next function.
  */
 export const xTokenAuthenticate = async (req, res, next) => {
   const user = await getUserFromXToken(req);
@@ -44,4 +34,4 @@ export const xTokenAuthenticate = async (req, res, next) => {
   }
   req.user = user;
   next();
-}
+};
