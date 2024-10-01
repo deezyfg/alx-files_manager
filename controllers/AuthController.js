@@ -1,53 +1,51 @@
+/* eslint-disable import/no-named-as-default */
 import { v4 as uuidv4 } from 'uuid';
-import UsersCollection from '../utils/users';
-import AuthTokenHandler from '../utils/tokens';
-import PasswordHandler from '../utils/passwords';
+import redisClient from '../utils/redis';
 
-class AuthController {
+export default class AuthController {
   /**
-   * Controller for GET /connect endpoint for authorizing users
-   * using Basic Auth scheme
-   * @param {import("express").Request} req - request object
-   * @param {import("express").Response} res - response object
+   * @api {get} /connect Get authentication token
+   * @apiName GetConnect
+   * @apiGroup Authentication
+   * 
+   * @apiHeader {String} Authorization Basic Auth username:password
+   * 
+   * @apiSuccess {String} token Authentication token
+   * 
+   * @apiSuccessExample {json} Success-Response:
+   *     HTTP/1.1 200 OK
+   *     {
+   *       "token": "a246721e-74b9-4f2e-80fa-60d3ee3fcbe9"
+   *     }
+   * 
+   * @apiError 401 Unauthorized
    */
   static async getConnect(req, res) {
     const { user } = req;
-    if (!user) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
+    const token = uuidv4();
 
-    const token = await AuthTokenHandler.createAuthToken(user);
-    return res.status(200).json({ token });
+    await redisClient.set(`auth_${token}`, user._id.toString(), 24 * 60 * 60);
+    res.status(200).json({ token });
   }
 
   /**
-   * Controller for GET /disconnect endpoint that logs out user
-   * if they were logged in.
-   * @param {import("express").Request} req - request object
-   * @param {import("express").Response} res - response object
+   * @api {get} /disconnect Disconnect user (logout)
+   * @apiName GetDisconnect
+   * @apiGroup Authentication
+   * 
+   * @apiHeader {String} X-Token Authentication token
+   * 
+   * @apiSuccess (204) {null} No Content
+   * 
+   * @apiSuccessExample {json} Success-Response:
+   *     HTTP/1.1 204 No Content
+   * 
+   * @apiError 401 Unauthorized
    */
   static async getDisconnect(req, res) {
     const token = req.headers['x-token'];
-    if (!token || !await AuthTokenHandler.getUserByToken(token)) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-    await AuthTokenHandler.deleteAuthToken(token);
-    return res.status(204).send();
-  }
 
-  /**
-   * Controller for GET /users/me endpoint that retrieves information
-   * about a logged in user
-   * @param {import("express").Request} req - request object
-   * @param {import("express").Response} res - response object
-   */
-  static async getMe(req, res) {
-    const { user } = req;
-    if (!user) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-    return res.status(200).json({ id: user._id.toString(), email: user.email });
+    await redisClient.del(`auth_${token}`);
+    res.status(204).send();
   }
 }
-
-export default AuthController;

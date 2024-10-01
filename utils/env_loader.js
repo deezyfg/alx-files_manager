@@ -1,40 +1,20 @@
 import { existsSync, readFileSync } from 'fs';
-import { config } from 'dotenv';
-import path from 'path';
 
 /**
- * Loads environment variables from .env files
- * @returns {void}
+ * Loads the appropriate environment variables for an event.
  */
 const envLoader = () => {
-  const env = process.env.NODE_ENV || 'development';
-  const envFiles = [
-    `.env.${env}.local`,
-    `.env.${env}`,
-    '.env.local',
-    '.env'
-  ];
+  const env = process.env.npm_lifecycle_event || 'dev';
+  const path = env.includes('test') || env.includes('cover') ? '.env.test' : '.env';
 
-  for (const file of envFiles) {
-    const filePath = path.resolve(process.cwd(), file);
-    if (existsSync(filePath)) {
-      config({ path: filePath, override: true });
-    }
-  }
+  if (existsSync(path)) {
+    const data = readFileSync(path, 'utf-8').trim().split('\n');
 
-  // Load test environment if running tests
-  if (process.env.npm_lifecycle_event && (process.env.npm_lifecycle_event.includes('test') || process.env.npm_lifecycle_event.includes('cover'))) {
-    const testEnvPath = path.resolve(process.cwd(), '.env.test');
-    if (existsSync(testEnvPath)) {
-      config({ path: testEnvPath, override: true });
-    }
-  }
-
-  // Validate required environment variables
-  const requiredEnvVars = ['DB_HOST', 'DB_PORT', 'DB_DATABASE']; // Add your required variables here
-  for (const varName of requiredEnvVars) {
-    if (!process.env[varName]) {
-      throw new Error(`Missing required environment variable: ${varName}`);
+    for (const line of data) {
+      const delimPosition = line.indexOf('=');
+      const variable = line.substring(0, delimPosition);
+      const value = line.substring(delimPosition + 1);
+      process.env[variable] = value;
     }
   }
 };

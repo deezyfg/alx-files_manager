@@ -31,7 +31,7 @@ class RedisClient {
   /**
    * Retrieves the value of a given key.
    * @param {String} key The key of the item to retrieve.
-   * @returns {Promise<String | Object>}
+   * @returns {String | Object}
    */
   async get(key) {
     return promisify(this.client.GET).bind(this.client)(key);
@@ -45,7 +45,8 @@ class RedisClient {
    * @returns {Promise<void>}
    */
   async set(key, value, duration) {
-    await promisify(this.client.SETEX).bind(this.client)(key, duration, value);
+    await promisify(this.client.SETEX)
+      .bind(this.client)(key, duration, value);
   }
 
   /**
@@ -58,5 +59,5 @@ class RedisClient {
   }
 }
 
-const redisClient = new RedisClient();
+export const redisClient = new RedisClient();
 export default redisClient;

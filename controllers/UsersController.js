@@ -1,55 +1,81 @@
-import Queue from 'bull';
-import UsersCollection from '../utils/users';
+/* eslint-disable import/no-named-as-default */
+import sha1 from 'sha1';
+import Queue from 'bull/lib/queue';
+import dbClient from '../utils/db';
 
-// User welcome email queue
 const userQueue = new Queue('email sending');
 
-class UsersController {
+export default class UsersController {
   /**
-   * Controller for endpoint POST /users for creating new users
-   * @param {import('express').Request} req - request object
-   * @param {import('express').Response} res - response object
+   * @api {post} /users Create a new user
+   * @apiName PostNew
+   * @apiGroup User
+   *
+   * @apiParam {String} email User's email
+   * @apiParam {String} password User's password
+   *
+   * @apiSuccess {String} email User's email
+   * @apiSuccess {String} id User's ID
+   *
+   * @apiSuccessExample {json} Success-Response:
+   *     HTTP/1.1 201 Created
+   *     {
+   *       "email": "bob@dylan.com",
+   *       "id": "5f1e7cda04a394508232559d"
+   *     }
+   *
+   * @apiError 400 Missing email
+   * @apiError 400 Missing password
+   * @apiError 400 Already exist
    */
   static async postNew(req, res) {
-    const { email, password } = req.body;
+    const email = req.body ? req.body.email : null;
+    const password = req.body ? req.body.password : null;
 
     if (!email) {
-      return res.status(400).json({ error: 'Missing email' });
+      res.status(400).json({ error: 'Missing email' });
+      return;
     }
     if (!password) {
-      return res.status(400).json({ error: 'Missing password' });
+      res.status(400).json({ error: 'Missing password' });
+      return;
     }
+    const user = await (await dbClient.usersCollection()).findOne({ email });
 
-    try {
-      const existingUser = await UsersCollection.getUser({ email });
-      if (existingUser) {
-        return res.status(400).json({ error: 'Already exist' });
-      }
-
-      const userId = await UsersCollection.createUser(email, password);
-      await userQueue.add({ userId });
-
-      return res.status(201).json({ id: userId.toString(), email });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Internal server error' });
+    if (user) {
+      res.status(400).json({ error: 'Already exist' });
+      return;
     }
+    const insertionInfo = await (await dbClient.usersCollection())
+      .insertOne({ email, password: sha1(password) });
+    const userId = insertionInfo.insertedId.toString();
+
+    userQueue.add({ userId });
+    res.status(201).json({ email, id: userId });
   }
 
   /**
-   * Controller for endpoint GET /users/me for retrieving the current user's information
-   * @param {import('express').Request} req - request object
-   * @param {import('express').Response} res - response object
+   * @api {get} /users/me Get user information
+   * @apiName GetMe
+   * @apiGroup User
+   *
+   * @apiHeader {String} X-Token Authentication token
+   *
+   * @apiSuccess {String} email User's email
+   * @apiSuccess {String} id User's ID
+   *
+   * @apiSuccessExample {json} Success-Response:
+   *     HTTP/1.1 200 OK
+   *     {
+   *       "email": "bob@dylan.com",
+   *       "id": "5f1e7cda04a394508232559d"
+   *     }
+   *
+   * @apiError 401 Unauthorized
    */
   static async getMe(req, res) {
     const { user } = req;
 
-    if (!user) {
-      return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    return res.status(200).json({ email: user.email, id: user._id.toString() });
+    res.status(200).json({ email: user.email, id: user._id.toString() });
   }
 }
-
-export default UsersController;

@@ -1,14 +1,24 @@
-import dbClient from '../utils/db';
+/* eslint-disable import/no-named-as-default */
 import redisClient from '../utils/redis';
+import dbClient from '../utils/db';
 
-class AppController {
+export default class AppController {
   /**
-   * Controller for endpoint GET /status that retrieves
-   * mongodb client and redis client connection status
-   * @param {import("express").Request} _req - request object
-   * @param {import("express").Response} res - response object
+   * @api {get} /status Get API Status
+   * @apiName GetStatus
+   * @apiGroup Status
+   *
+   * @apiSuccess {Boolean} redis Redis connection status
+   * @apiSuccess {Boolean} db Database connection status
+   *
+   * @apiSuccessExample {json} Success-Response:
+   *     HTTP/1.1 200 OK
+   *     {
+   *       "redis": true,
+   *       "db": true
+   *     }
    */
-  static getStatus(_req, res) {
+  static getStatus(req, res) {
     res.status(200).json({
       redis: redisClient.isAlive(),
       db: dbClient.isAlive(),
@@ -16,23 +26,24 @@ class AppController {
   }
 
   /**
-   * Controller for endpoint GET /stats that retrieves
-   * count of users and files
-   * @param {import("express").Request} _req - Request object
-   * @param {import("express").Response} res - Response object
-   * @param {import("express").NextFunction} next - Next function
+   * @api {get} /stats Get API Stats
+   * @apiName GetStats
+   * @apiGroup Stats
+   *
+   * @apiSuccess {Number} users Number of users in the database
+   * @apiSuccess {Number} files Number of files in the database
+   *
+   * @apiSuccessExample {json} Success-Response:
+   *     HTTP/1.1 200 OK
+   *     {
+   *       "users": 12,
+   *       "files": 1231
+   *     }
    */
-  static async getStats(_req, res, next) {
-    try {
-      const [users, files] = await Promise.all([
-        dbClient.nbUsers(),
-        dbClient.nbFiles()
-      ]);
-      res.status(200).json({ users, files });
-    } catch (err) {
-      next(err);
-    }
+  static getStats(req, res) {
+    Promise.all([dbClient.nbUsers(), dbClient.nbFiles()])
+      .then(([usersCount, filesCount]) => {
+        res.status(200).json({ users: usersCount, files: filesCount });
+      });
   }
 }
-
-export default AppController;

@@ -122,7 +122,95 @@ At the end of this project, you are expected to be able to [explain to anyone](h
   <summary>Click to show/hide file contents</summary>
 
 ```js
-
+{
+    "name": "files_manager",
+    "version": "1.0.0",
+    "description": "A simple file management API built with Node.js.",
+    "author": "Peter Opoku-Mensah <mensahpeter421@gmail.com>",
+    "license": "MIT",
+    "private": true,
+    "main": "server.js",
+    "scripts": {
+        "lint": "./node_modules/.bin/eslint",
+        "lint-nt": "./node_modules/.bin/eslint.cmd",
+        "check-lint": "lint controllers/ libs/ middlewares/ routes/ utils/ server.js worker.js",
+        "check-lint-nt": "yarn lint-nt controllers/ libs/ middlewares/ routes/ utils/ server.js worker.js",
+        "start-server": "nodemon --exec babel-node --presets @babel/preset-env ./server.js",
+        "start-worker": "nodemon --exec babel-node --presets @babel/preset-env ./worker.js",
+        "dev": "nodemon --exec babel-node --presets @babel/preset-env",
+        "test": "./node_modules/.bin/mocha --opts mocha.opts tests/**/*.js",
+        "test-with-coverage": "nyc --reporter=text --reporter=json-summary ./node_modules/.bin/mocha --opts mocha.opts tests/**/*.js",
+        "coveralls": "nyc ./node_modules/.bin/mocha --opts mocha.opts tests/**/*.js && nyc report --reporter=text-lcov | coveralls",
+        "make-badges": "istanbul-badges-readme --coverageDir=coverage",
+        "generate-docs": "apidoc -i ./ -o apidoc/"
+    },
+  "dependencies": {
+    "bull": "^3.16.0",
+    "chai-http": "^4.3.0",
+    "dotenv": "^16.0.1",
+    "express": "^4.17.1",
+    "googleapis": "^101.0.0",
+    "image-thumbnail": "^1.0.10",
+    "mime-message": "^0.1.3",
+    "mime-types": "^2.1.27",
+    "mongodb": "^3.5.9",
+    "redis": "^2.8.0",
+    "sha1": "^1.1.1",
+    "uuid": "^8.2.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.0",
+    "@babel/core": "^7.8.0",
+    "@babel/node": "^7.8.0",
+    "@babel/preset-env": "^7.8.2",
+    "@babel/register": "^7.8.0",
+    "apidoc": "^0.54.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "coveralls": "^3.1.1",
+    "eslint": "^6.4.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.17.0",
+    "istanbul-badges-readme": "^1.8.5",
+    "mocha": "^6.2.2",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nodemon": "^2.0.2",
+    "nyc": "^15.1.0",
+    "request": "^2.88.0",
+    "sinon": "^7.5.0",
+    "supertest": "^6.2.3"
+  },
+  "apidoc": {
+    "name": "File Manager API",
+    "title": "FIle Manager API",
+     "url": "http://127.0.0.1:5000",
+  "header": {
+     "title": "Introduction",
+     "filename": "header.md"
+        },
+  "order": [
+    "Status",
+    "Stats",
+    "Authentication",
+    "User",
+    "Files"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deezyfg/alx-files_manager"
+  },
+  "bugs": {
+    "url": "https://github.com/deezyfg/alx-files_manager/issues"
+  },
+  "homepage": "https://github.com/deezyfg/alx-files_manager/blob/master/README.md",
+  "engines": {
+    "node": "16.x",
+    "npm": "8.x",
+    "yarn": "1.x"
+  }
+}
 ```
 
 </details>
@@ -827,7 +915,61 @@ In real life, you can use a third party service like [Mailgun](https://www.mailg
 
 ---
 
-## File Structure
+## 📂 File Structure
+
+```
+📁 alx-files_manager/
+├── 📄 babel.config.js
+├── 📄 CODE_OF_CONDUCT.md
+├── 📄 CONTRIBUTING.md
+├── 📁 controllers/
+│ ├── 📄 AppController.js
+│ ├── 📄 AuthController.js
+│ ├── 📄 FilesController.js
+│ └── 📄 UsersController.js
+├── 📄 header.md
+├── 📁 libs/
+│ ├── 📄 boot.js
+│ └── 📄 middlewares.js
+├── 📄 LICENSE
+├── 📁 middlewares/
+│ ├── 📄 auth.js
+│ └── 📄 error.js
+├── 📄 mocha.opts
+├── 📄 package.json
+├── 📄 README.md
+├── 📁 routes/
+│ └── 📄 index.js
+├── 📄 server.js
+├── 📁 tests/
+│ ├── 📁 controllers/
+│ │ ├── 📄 AppController.test.js
+│ │ ├── 📄 AuthController.test.js
+│ │ ├── 📄 FilesController.test.js
+│ │ └── 📄 UsersController.test.js
+│ ├── 📄 init.test.js
+│ └── 📁 utils/
+│ ├── 📄 db.test.js
+│ └── 📄 redis.test.js
+├── 📁 utils/
+│ ├── 📄 auth.js
+│ ├── 📄 db.js
+│ ├── 📄 env_loader.js
+│ ├── 📄 mailer.js
+│ └── 📄 redis.js
+├── 📄 worker.js
+├── 🌍 .env
+├── 🌍 .env.test
+├── 📝 .eslintrc.js
+└── 🗑️ .gitignore
+```
+
+In this representation:
+- **📁** represents directories (folders).
+- **📄** represents files.
+- **🌍** represents environment files.
+- **📝** represents the ESLint configuration file.
+- **🗑️** represents the `.gitignore` file.
 
 ## ⚙️ Installation
 

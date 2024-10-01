@@ -1,7 +1,14 @@
+/* eslint-disable no-unused-vars */
 import { Request, Response, NextFunction } from 'express';
 
 /**
- * Represents an error in this API.
+ * @api {error} APIError API Error
+ * @apiName APIError
+ * @apiGroup Errors
+ * @apiDescription Represents an error in this API.
+ *
+ * @apiParam {Number} code HTTP status code
+ * @apiParam {String} message Error message
  */
 export class APIError extends Error {
   constructor(code, message) {
@@ -12,29 +19,26 @@ export class APIError extends Error {
 }
 
 /**
- * Custom error handler
- * @param {Error} err - Error object
- * @param {Request} req - Request object
- * @param {Response} res - Response object
- * @param {NextFunction} next - Next function
- * @returns - Error response
+ * @api {middleware} errorResponse Error Response Middleware
+ * @apiName ErrorResponse
+ * @apiGroup Errors
+ * @apiDescription Handles error responses for the API.
+ *
+ * @apiParam {Error} err The error object.
+ * @apiParam {Request} req The Express request object.
+ * @apiParam {Response} res The Express response object.
+ * @apiParam {NextFunction} next The Express next function.
+ *
+ * @apiError (Error 4xx-5xx) {Object} error Error object with message
  */
-export const errorHandler = (err, req, res, next) => {
-  if (res.headersSent) {
-    return next(err);
-  }
-
+export const errorResponse = (err, req, res, next) => {
   const defaultMsg = `Failed to process ${req.url}`;
 
   if (err instanceof APIError) {
-    return res.status(err.code).json({ error: err.message || defaultMsg });
+    res.status(err.code).json({ error: err.message || defaultMsg });
+    return;
   }
-
-  // For unhandled errors, return a 500 status code
-  const statusCode = err.statusCode || 500;
-  const errorMessage = err.message || 'Oops! Something went wrong!';
-
-  return res.status(statusCode).json({ error: errorMessage });
-};
-
-export default errorHandler;
+  res.status(500).json({
+    error: err ? err.message || err.toString() : defaultMsg,
+  });
+}

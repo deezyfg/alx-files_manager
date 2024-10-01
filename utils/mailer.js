@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import fs from 'fs';
 import readline from 'readline';
 import { promisify } from 'util';
@@ -7,7 +8,8 @@ import { gmail_v1 as gmailV1, google } from 'googleapis';
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/gmail.send'];
 // The file token.json stores the user's access and refresh tokens, and is
-// created automatically when the authorization flow completes for the first time.
+// created automatically when the authorization flow completes for the first
+// time.
 const TOKEN_PATH = 'token.json';
 const readFileAsync = promisify(fs.readFile);
 const writeFileAsync = promisify(fs.writeFile);
@@ -16,7 +18,7 @@ const writeFileAsync = promisify(fs.writeFile);
  * Get and store new token after prompting for user authorization, and then
  * execute the given callback with the authorized OAuth2 client.
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
- * @param {function} callback The callback for the authorized client.
+ * @param {getEventsCallback} callback The callback for the authorized client.
  */
 async function getNewToken(oAuth2Client, callback) {
   const authUrl = oAuth2Client.generateAuthUrl({
@@ -53,16 +55,21 @@ async function getNewToken(oAuth2Client, callback) {
  * @param {function} callback The callback to call with the authorized client.
  */
 async function authorize(credentials, callback) {
-  const { client_secret, client_id, redirect_uris } = credentials.web;
-  const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
+  const clientSecret = credentials.web.client_secret;
+  const clientId = credentials.web.client_id;
+  const redirectURIs = credentials.web.redirect_uris;
+  const oAuth2Client = new google.auth.OAuth2(
+    clientId,
+    clientSecret,
+    redirectURIs[0],
+  );
   console.log('Client authorization beginning');
-  try {
-    const token = await readFileAsync(TOKEN_PATH);
-    oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client);
-  } catch (err) {
-    await getNewToken(oAuth2Client, callback);
-  }
+  // Check if we have previously stored a token.
+  await readFileAsync(TOKEN_PATH)
+    .then((token) => {
+      oAuth2Client.setCredentials(JSON.parse(token));
+      callback(oAuth2Client);
+    }).catch(async () => getNewToken(oAuth2Client, callback));
   console.log('Client authorization done');
 }
 
@@ -87,12 +94,9 @@ function sendMailService(auth, mail) {
 }
 
 /**
- * Contains routines for mail delivery with Gmail.
+ * Contains routines for mail delivery with GMail.
  */
 export default class Mailer {
-  /**
-   * Checks the authentication status.
-   */
   static checkAuth() {
     readFileAsync('credentials.json')
       .then(async (content) => {
@@ -107,13 +111,6 @@ export default class Mailer {
       });
   }
 
-  /**
-   * Builds a MIME message for email.
-   * @param {string} dest Destination email address.
-   * @param {string} subject Email subject.
-   * @param {string} message Email body.
-   * @returns {Object} MIME message object.
-   */
   static buildMessage(dest, subject, message) {
     const senderEmail = process.env.GMAIL_SENDER;
     const msgData = {
@@ -139,10 +136,6 @@ export default class Mailer {
     throw new Error('Invalid MIME message');
   }
 
-  /**
-   * Sends an email.
-   * @param {Object} mail The email to send.
-   */
   static sendMail(mail) {
     readFileAsync('credentials.json')
       .then(async (content) => {
