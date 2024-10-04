@@ -1198,6 +1198,7 @@ After the tests and coverage report are generated, run the following command to 
     ```bash
     npm run make-badges
     ```
+
 **Note:** Your `README.md` file must contain placeholder comments for the badges. The `istanbul-badges-readme` package looks for specific comments to insert the badges. You have two alternatives for badge placeholders:
 
 * **Option 1: Using HTML comments (Recommended)**
@@ -1225,7 +1226,7 @@ This method is preferred for tools like `istanbul-badges-readme` that directly m
 ![Lines](https://img.shields.io/badge/lines-0%25-red.svg?style=flat)
 ```
 
-This method uses static URLs that need to be updated manually or through a script that modifies these URLs based on your coverage results. Initially, all badges will show 0% coverage. After running your tests and executing the make-badges script, these placeholders will be updated with your actual coverage percentages and appropriate colors based on the coverage levels.
+This method uses static URLs that need to be updated manually or through a script that modifies these URLs based on your coverage results. Initially, all badges will show `0%` coverage. After running your tests and executing the `make-badges` script, these placeholders will be updated with your actual coverage percentages and appropriate colors based on the coverage levels.
 
 ## 📚 Documentation
 
