@@ -1056,7 +1056,7 @@ Ensure that both Redis and MongoDB services are running on your system. You can 
 
 2. **For MongoDB:**
     ```bash
-sudo service mongodb start
+    sudo service mongodb start
     ```
 
 ### Step 2: Check if Services Are Running:
