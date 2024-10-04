@@ -74,7 +74,6 @@ This project focuses on building a file management system using modern web techn
 ![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
 
 ## Coverage Badges
-<!-- coverage:badge -->
 <!-- coverage:lines -->
 <!-- coverage:branches -->
 <!-- coverage:functions -->
@@ -1205,7 +1204,6 @@ npm run make-badges
 
 ```text
 ## Coverage Badges
-<!-- coverage:badge -->
 <!-- coverage:lines -->
 <!-- coverage:branches -->
 <!-- coverage:functions -->
@@ -1220,10 +1218,10 @@ This method is preferred for tools like `istanbul-badges-readme` that directly m
 ```text
 ## Coverage Badges
 ![Coverage](https://img.shields.io/badge/coverage-0%25-red.svg?style=flat)
-![Statements](https://img.shields.io/badge/statements-0%25-red.svg?style=flat)
-![Branches](https://img.shields.io/badge/branches-0%25-red.svg?style=flat)
-![Functions](https://img.shields.io/badge/functions-0%25-red.svg?style=flat)
-![Lines](https://img.shields.io/badge/lines-0%25-red.svg?style=flat)
+![Statements](https://img.shields.io/badge/statements-92.81%25-brightgreen.svg?style=flat)
+![Branches](https://img.shields.io/badge/branches-78.39%25-red.svg?style=flat)
+![Functions](https://img.shields.io/badge/functions-86.53%25-yellow.svg?style=flat)
+![Lines](https://img.shields.io/badge/lines-92.47%25-brightgreen.svg?style=flat)
 ```
 
 This method uses static URLs that need to be updated manually or through a script that modifies these URLs based on your coverage results. Initially, all badges will show `0%` coverage. After running your tests and executing the `make-badges` script, these placeholders will be updated with your actual coverage percentages and appropriate colors based on the coverage levels.
