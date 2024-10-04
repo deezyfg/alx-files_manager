@@ -1068,14 +1068,14 @@ You can verify if the services are running by checking their status:
     sudo service redis-server status
     ```
 
-2. For MongoDB:
+2. **For MongoDB:**
     ```bash
     sudo service mongodb status
     ```
 
 - **Note:** If Redis and MongoDB are not installed, you will need to install them first.Follow the official installation guides:
-          - [Redis](https://redis.io/docs/getting-started/installation/install-redis-on-linux/)
-          - [MongoDB](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/)
+    - [Redis](https://redis.io/docs/getting-started/installation/install-redis-on-linux/)
+    - [MongoDB](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-ubuntu/)
 
 ### Step 3: Start the Server and Worker
 
@@ -1195,9 +1195,9 @@ nyc --reporter=text --reporter=json-summary ./node_modules/.bin/mocha --opts moc
 This command runs the tests, generates a coverage report, and sends it to Coveralls for tracking your project's code coverage over time.
 
 After the tests and coverage report are generated, run the following command to generate coverage badges in your `README.md` file:
-    ```bash
-    npm run make-badges
-    ```
+```bash
+npm run make-badges
+```
 
 **Note:** Your `README.md` file must contain placeholder comments for the badges. The `istanbul-badges-readme` package looks for specific comments to insert the badges. You have two alternatives for badge placeholders:
 
