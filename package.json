@@ -17,7 +17,7 @@
     "test": "./node_modules/.bin/mocha --opts mocha.opts tests/**/*.js",
     "test-with-coverage": "nyc --reporter=text --reporter=json-summary ./node_modules/.bin/mocha --opts mocha.opts tests/**/*.js",
     "coveralls": "nyc ./node_modules/.bin/mocha --opts mocha.opts tests/**/*.js && nyc report --reporter=text-lcov | coveralls",
-    "make-badges": "istanbul-badges-readme --coverageDir=coverage",
+    "make-badges": "istanbul-badges-readme --coverageDir=coverage --readmeFile=README.md",
     "generate-docs": "apidoc -i ./ -o apidoc/"
   },
   "dependencies": {

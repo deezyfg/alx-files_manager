@@ -74,10 +74,10 @@ This project focuses on building a file management system using modern web techn
 ![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
 
 ## Coverage Badges
-<!-- coverage:lines -->
-<!-- coverage:branches -->
-<!-- coverage:functions -->
-<!-- coverage:statements -->
+![Statements](https://img.shields.io/badge/statements-92.81%25-brightgreen.svg?style=flat)
+![Branches](https://img.shields.io/badge/branches-78.39%25-red.svg?style=flat)
+![Functions](https://img.shields.io/badge/functions-86.53%25-yellow.svg?style=flat)
+![Lines](https://img.shields.io/badge/lines-92.47%25-brightgreen.svg?style=flat)
 
 ## Resources 📚️
 
@@ -140,7 +140,7 @@ At the end of this project, you are expected to be able to [explain to anyone](h
         "test": "./node_modules/.bin/mocha --opts mocha.opts tests/**/*.js",
         "test-with-coverage": "nyc --reporter=text --reporter=json-summary ./node_modules/.bin/mocha --opts mocha.opts tests/**/*.js",
         "coveralls": "nyc ./node_modules/.bin/mocha --opts mocha.opts tests/**/*.js && nyc report --reporter=text-lcov | coveralls",
-        "make-badges": "istanbul-badges-readme --coverageDir=coverage",
+        "make-badges": "istanbul-badges-readme --coverageDir=coverage --readmeFile=README.md",
         "generate-docs": "apidoc -i ./ -o apidoc/"
     },
   "dependencies": {
@@ -1198,30 +1198,16 @@ After the tests and coverage report are generated, run the following command to 
 npm run make-badges
 ```
 
-**Note:** Your `README.md` file must contain placeholder comments for the badges. The `istanbul-badges-readme` package looks for specific comments to insert the badges. You have two alternatives for badge placeholders:
+**Note:** Your `README.md` file must contain placeholder comments for the badges. The `istanbul-badges-readme` package looks for specific comments to insert the badges. Below is the badge placeholder to use:
 
-* **Option 1: Using HTML comments (Recommended)**
-
-```text
-## Coverage Badges
-<!-- coverage:lines -->
-<!-- coverage:branches -->
-<!-- coverage:functions -->
-<!-- coverage:statements -->
-```
-
-This method is preferred for tools like `istanbul-badges-readme` that directly modify your `README.md` file. These tools typically look for specific comments like `<!-- coverage:badge -->` and replace them with the actual badge markdown.
-
-
-* **Option 2: Using shield.io URLs**
+* **Using shield.io URLs**
 
 ```text
 ## Coverage Badges
-![Coverage](https://img.shields.io/badge/coverage-0%25-red.svg?style=flat)
-![Statements](https://img.shields.io/badge/statements-92.81%25-brightgreen.svg?style=flat)
-![Branches](https://img.shields.io/badge/branches-78.39%25-red.svg?style=flat)
-![Functions](https://img.shields.io/badge/functions-86.53%25-yellow.svg?style=flat)
-![Lines](https://img.shields.io/badge/lines-92.47%25-brightgreen.svg?style=flat)
+![Statements](https://img.shields.io/badge/statements-0%25-red.svg)
+![Branches](https://img.shields.io/badge/branches-0%25-red.svg)
+![Functions](https://img.shields.io/badge/functions-0%25-red.svg)
+![Lines](https://img.shields.io/badge/lines-0%25-red.svg)
 ```
 
 This method uses static URLs that need to be updated manually or through a script that modifies these URLs based on your coverage results. Initially, all badges will show `0%` coverage. After running your tests and executing the `make-badges` script, these placeholders will be updated with your actual coverage percentages and appropriate colors based on the coverage levels.
